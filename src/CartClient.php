@@ -15,18 +15,17 @@ use Lumexa\CartSdk\Exceptions\ValidationException;
 
 class CartClient
 {
-    private Client $client;
+    private Client $httpClient;
 
     public function __construct(
         private readonly string $baseUrl,
-        private readonly string $apiKey,
-        private readonly int $storeId,
+        private readonly string $storeToken,
+        ?Client $httpClient = null
     ) {
-        $this->client = new Client([
+        $this->httpClient = $httpClient ?? new Client([
             'base_uri' => $this->baseUrl,
             'headers' => [
-                'Authorization' => "Bearer {$this->apiKey}",
-                'X-Store-ID' => $this->storeId,
+                'X-Store-Token' => $this->storeToken,
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ],
@@ -76,7 +75,7 @@ class CartClient
         }
 
         try {
-            $response = $this->client->get("/api/carts/{$cartId}");
+            $response = $this->httpClient->get("/api/carts/{$cartId}");
             $data = json_decode((string) $response->getBody(), true);
 
             return CartDTO::fromArray($data);
@@ -107,7 +106,7 @@ class CartClient
         }
 
         try {
-            $response = $this->client->post('/api/carts', [
+            $response = $this->httpClient->post('/api/carts', [
                 'json' => [
                     'session_id' => $sessionId,
                     'user_id' => $userId,
@@ -145,7 +144,7 @@ class CartClient
         }
 
         try {
-            $response = $this->client->post("/api/carts/{$cartId}/items", [
+            $response = $this->httpClient->post("/api/carts/{$cartId}/items", [
                 'json' => [
                     'product_variant_id' => $variantId,
                     'quantity' => $quantity,
@@ -184,7 +183,7 @@ class CartClient
         }
 
         try {
-            $response = $this->client->put("/api/carts/{$cartId}/items/{$itemId}", [
+            $response = $this->httpClient->put("/api/carts/{$cartId}/items/{$itemId}", [
                 'json' => [
                     'quantity' => $quantity,
                 ],
@@ -217,7 +216,7 @@ class CartClient
         }
 
         try {
-            $this->client->delete("/api/carts/{$cartId}/items/{$itemId}");
+            $this->httpClient->delete("/api/carts/{$cartId}/items/{$itemId}");
         } catch (\Throwable $e) {
             $this->handleApiError($e);
         }
@@ -237,7 +236,7 @@ class CartClient
         }
 
         try {
-            $this->client->delete("/api/carts/{$cartId}/items");
+            $this->httpClient->delete("/api/carts/{$cartId}/items");
         } catch (\Throwable $e) {
             $this->handleApiError($e);
         }
@@ -258,7 +257,7 @@ class CartClient
         }
 
         try {
-            $response = $this->client->get("/api/carts/{$cartId}/items");
+            $response = $this->httpClient->get("/api/carts/{$cartId}/items");
             $data = json_decode((string) $response->getBody(), true);
 
             return array_map(fn (array $item) => CartItemDTO::fromArray($item), $data);

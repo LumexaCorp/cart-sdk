@@ -17,8 +17,7 @@ use Lumexa\CartSdk\CartClient;
 
 $client = new CartClient(
     baseUrl: 'https://api.lumexa.io',
-    apiKey: 'votre-clé-api',
-    storeId: 123,
+    storeToken: 'votre-token-de-store'
 );
 ```
 
