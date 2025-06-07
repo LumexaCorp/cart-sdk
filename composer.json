@@ -1,0 +1,27 @@
+{
+    "name": "lumexa/cart-sdk",
+    "description": "SDK for interacting with Lumexa Cart API",
+    "type": "library",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Lumexa\\CartSdk\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Lumexa",
+            "email": "contact@lumexa.io"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.8",
+        "illuminate/support": "^10.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "mockery/mockery": "^1.6"
+    },
+    "minimum-stability": "stable"
+}
