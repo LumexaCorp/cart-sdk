@@ -123,38 +123,40 @@ class CartClient
 
     /**
      * Ajoute un produit au panier
+     * @param array $data ['product_variant_id' => int, 'quantity' => int, 'attributes' => array, 'unit_price' => float]
+     * @return CartItemDTO
      *
      * @throws CartException
      * @throws CartValidationException
      * @throws CartItemValidationException
      * @throws ValidationException
      */
-    public function addItem(int $cartId, int $variantId, int $quantity, array $attributes = []): CartItemDTO
+    public function addItem(int $cartId, array $data): CartItemDTO
     {
         if ($cartId <= 0) {
             throw CartValidationException::invalidCartId();
         }
 
-        if ($variantId <= 0) {
+        if ($data['product_variant_id'] <= 0) {
             throw CartItemValidationException::invalidVariantId();
         }
 
-        if ($quantity <= 0) {
+        if ($data['quantity'] <= 0) {
             throw CartItemValidationException::invalidQuantity();
         }
 
         try {
             $response = $this->httpClient->post("/api/carts/{$cartId}/items", [
                 'json' => [
-                    'product_variant_id' => $variantId,
-                    'quantity' => $quantity,
-                    'attributes' => $attributes,
+                    'product_variant_id' => $data['product_variant_id'],
+                    'quantity' => $data['quantity'],
+                    'attributes' => $data['attributes'],
                 ],
             ]);
 
             $data = json_decode((string) $response->getBody(), true);
 
-            return CartItemDTO::fromArray($data);
+            return CartItemDTO::fromArray($data['data']);
         } catch (\Throwable $e) {
             $this->handleApiError($e);
         }
@@ -191,7 +193,7 @@ class CartClient
 
             $data = json_decode((string) $response->getBody(), true);
 
-            return CartItemDTO::fromArray($data);
+            return CartItemDTO::fromArray($data['data']);
         } catch (\Throwable $e) {
             $this->handleApiError($e);
         }
@@ -260,7 +262,20 @@ class CartClient
             $response = $this->httpClient->get("/api/carts/{$cartId}/items");
             $data = json_decode((string) $response->getBody(), true);
 
-            return array_map(fn (array $item) => CartItemDTO::fromArray($item), $data);
+            return array_map(fn (array $item) => CartItemDTO::fromArray($item), $data['data']);
+        } catch (\Throwable $e) {
+            $this->handleApiError($e);
+        }
+    }
+
+    public function getCartByGuestId(string $guestId): ?CartDTO
+    {
+        try {
+            $response = $this->httpClient->get("/api/carts/guest/{$guestId}");
+
+            $data = json_decode((string) $response->getBody(), true);
+
+            return CartDTO::fromArray($data['data']);
         } catch (\Throwable $e) {
             $this->handleApiError($e);
         }
