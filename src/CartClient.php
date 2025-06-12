@@ -129,32 +129,28 @@ class CartClient
      * @throws CartItemValidationException
      * @throws ValidationException
      */
-    public function addItem(int $cartId, int $variantId, int $quantity, array $attributes = []): CartItemDTO
+    public function addItem(int $cartId, array $data): CartItemDTO
     {
         if ($cartId <= 0) {
             throw CartValidationException::invalidCartId();
         }
 
-        if ($variantId <= 0) {
+        if ($data['product_variant_id'] <= 0) {
             throw CartItemValidationException::invalidVariantId();
         }
 
-        if ($quantity <= 0) {
+        if ($data['quantity'] <= 0) {
             throw CartItemValidationException::invalidQuantity();
         }
 
         try {
             $response = $this->httpClient->post("/api/carts/{$cartId}/items", [
-                'json' => [
-                    'product_variant_id' => $variantId,
-                    'quantity' => $quantity,
-                    'attributes' => $attributes,
-                ],
+                'json' => $data
             ]);
 
             $data = json_decode((string) $response->getBody(), true);
 
-            return CartItemDTO::fromArray($data);
+            return CartItemDTO::fromArray($data['data']);
         } catch (\Throwable $e) {
             $this->handleApiError($e);
         }
