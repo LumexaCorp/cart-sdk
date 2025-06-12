@@ -11,11 +11,11 @@ class CartDTO
      */
     public function __construct(
         public readonly int $id,
-        public readonly int $storeId,
-        public readonly ?string $sessionId,
+        public readonly ?string $guestId,
         public readonly ?int $userId,
         public readonly string $status,
-        public readonly float $total,
+        public readonly float $total_items,
+        public readonly float $total_price,
         public readonly array $items,
         public readonly string $createdAt,
         public readonly string $updatedAt,
@@ -29,11 +29,11 @@ class CartDTO
     {
         return new self(
             id: $data['id'],
-            storeId: $data['store_id'],
-            sessionId: $data['session_id'] ?? null,
+            guestId: $data['guest_id'] ?? null,
             userId: $data['user_id'] ?? null,
             status: $data['status'],
-            total: (float) $data['total'],
+            total_items: (float) $data['total_items'],
+            total_price: (float) $data['total_price'],
             items: array_map(
                 fn (array $item) => CartItemDTO::fromArray($item),
                 $data['items'] ?? []
@@ -50,11 +50,11 @@ class CartDTO
     {
         return [
             'id' => $this->id,
-            'store_id' => $this->storeId,
-            'session_id' => $this->sessionId,
+            'guest_id' => $this->guestId,
             'user_id' => $this->userId,
             'status' => $this->status,
-            'total' => $this->total,
+            'total_items' => $this->total_items,
+            'total_price' => $this->total_price,
             'items' => array_map(fn (CartItemDTO $item) => $item->toArray(), $this->items),
             'created_at' => $this->createdAt,
             'updated_at' => $this->updatedAt,
