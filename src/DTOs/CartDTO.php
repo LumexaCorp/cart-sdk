@@ -14,7 +14,7 @@ class CartDTO
         public readonly ?string $guestId,
         public readonly ?int $userId,
         public readonly string $status,
-        public readonly float $total_items,
+        public readonly int $total_items,
         public readonly float $total_price,
         public readonly array $items,
         public readonly string $createdAt,
@@ -32,8 +32,8 @@ class CartDTO
             guestId: $data['guest_id'] ?? null,
             userId: $data['user_id'] ?? null,
             status: $data['status'],
-            total_items: (float) $data['total_items'],
-            total_price: (float) $data['total_price'],
+            total_items: (int) ($data['total_items'] ?? 0),
+            total_price: (float) ($data['total_price'] ?? 0),
             items: array_map(
                 fn (array $item) => CartItemDTO::fromArray($item),
                 $data['items'] ?? []
