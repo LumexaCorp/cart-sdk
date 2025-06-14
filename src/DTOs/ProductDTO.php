@@ -10,7 +10,7 @@ class ProductDTO
         public readonly int $id,
         public readonly string $name,
         public readonly string $slug,
-        public readonly string $description,
+        public readonly ?string $description,
         public readonly string $image,
         public readonly string $price,
         public readonly string $product_type,
