@@ -14,8 +14,8 @@ class CartItemDTO
         public readonly float $total_price,
         public readonly array $attributes,
         public readonly ?ProductVariantDTO $product_variant,
-        public readonly string $createdAt,
-        public readonly string $updatedAt,
+        public readonly string $created_at,
+        public readonly string $updated_at,
     ) {
     }
 
@@ -32,8 +32,8 @@ class CartItemDTO
             total_price: (float) $data['total_price'],
             attributes: $data['attributes'] ?? [],
             product_variant: ProductVariantDTO::fromArray($data['product_variant']),
-            createdAt: $data['created_at'],
-            updatedAt: $data['updated_at'],
+            created_at: $data['created_at'],
+            updated_at: $data['updated_at'],
         );
     }
 
@@ -50,8 +50,8 @@ class CartItemDTO
             'total_price' => $this->total_price,
             'attributes' => $this->attributes,
             'product_variant' => $this->product_variant->toArray(),
-            'created_at' => $this->createdAt,
-            'updated_at' => $this->updatedAt,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

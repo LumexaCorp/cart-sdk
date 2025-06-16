@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Lumexa\CartSdk;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use Lumexa\CartSdk\DTOs\CartDTO;
+use Illuminate\Support\Facades\Log;
 use Lumexa\CartSdk\DTOs\CartItemDTO;
+use GuzzleHttp\Exception\ClientException;
 use Lumexa\CartSdk\Exceptions\CartException;
+use Lumexa\CartSdk\Exceptions\ValidationException;
 use Lumexa\CartSdk\Exceptions\CartValidationException;
 use Lumexa\CartSdk\Exceptions\CartItemValidationException;
-use Lumexa\CartSdk\Exceptions\ValidationException;
 
 class CartClient
 {
@@ -78,7 +79,7 @@ class CartClient
             $response = $this->httpClient->get("/api/carts/{$cartId}");
             $data = json_decode((string) $response->getBody(), true);
 
-            return CartDTO::fromArray($data);
+            return CartDTO::fromArray($data['data']);
         } catch (\Throwable $e) {
             $this->handleApiError($e);
         }

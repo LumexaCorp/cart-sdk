@@ -11,14 +11,14 @@ class CartDTO
      */
     public function __construct(
         public readonly int $id,
-        public readonly ?string $guestId,
-        public readonly ?int $userId,
+        public readonly ?string $guest_id,
+        public readonly ?int $user_id,
         public readonly string $status,
         public readonly int $total_items,
         public readonly float $total_price,
         public readonly array $items,
-        public readonly string $createdAt,
-        public readonly string $updatedAt,
+        public readonly string $created_at,
+        public readonly string $updated_at,
     ) {
     }
 
@@ -29,8 +29,8 @@ class CartDTO
     {
         return new self(
             id: $data['id'],
-            guestId: $data['guest_id'] ?? null,
-            userId: $data['user_id'] ?? null,
+            guest_id: $data['guest_id'] ?? null,
+            user_id: $data['user_id'] ?? null,
             status: $data['status'],
             total_items: (int) ($data['total_items'] ?? 0),
             total_price: (float) ($data['total_price'] ?? 0),
@@ -38,8 +38,8 @@ class CartDTO
                 fn (array $item) => CartItemDTO::fromArray($item),
                 $data['items'] ?? []
             ),
-            createdAt: $data['created_at'],
-            updatedAt: $data['updated_at'],
+            created_at: $data['created_at'],
+            updated_at: $data['updated_at'],
         );
     }
 
@@ -50,14 +50,14 @@ class CartDTO
     {
         return [
             'id' => $this->id,
-            'guest_id' => $this->guestId,
-            'user_id' => $this->userId,
+            'guest_id' => $this->guest_id,
+            'user_id' => $this->user_id,
             'status' => $this->status,
             'total_items' => $this->total_items,
             'total_price' => $this->total_price,
             'items' => array_map(fn (CartItemDTO $item) => $item->toArray(), $this->items),
-            'created_at' => $this->createdAt,
-            'updated_at' => $this->updatedAt,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }
